@@ -12,10 +12,10 @@ sciahk = C:\Program Files\AutoHotkey\SciTE\SciTE.exe
 
 ;~ DO NOT USE FUNCTION Link
 
-Clipboard =
+;Clipboard =
 
-global getemailadd := "smogmanus@outlook.com;"
-global getemaildbjt := "dbtessmer@gmail.com;tapp_692@msn.com;"
+
+
 
 Menu, Tray, Icon, % A_WinDir "\system32\netshell.dll", 86 ; Shows a world icon in the system tray
 
@@ -35,6 +35,17 @@ return
 sendinput %sURL%
 Return
 
+::wd.::
+MsgBox, %a_workingdir%
+return
+
+
+zeropage:
+			winget, ActiveID, ID, A
+			WinActivate, ahk_exe firefox.exe
+			send, 0
+			WinActivate, ahk_id %ActiveId%
+return
 
 ^!k::  ;sends webpage title
 			;~ mtclient()
@@ -43,69 +54,96 @@ Return
 			global
 			;~ email config for shareable document  ^!l
 			SetKeyDelay 111755,111755,111755
+			;~ winget, ActiveID, ID, A
+			;~ ; MsgBox %activeID% %ID% %A%
+			;~ WinActivate, ahk_exe firefox.exe
 
-			nTime := A_TickCount
-			sURL := GetActiveBrowserURL()
-			;~ MsgBox %sURL%
-			WinGetTitle, title, A
-			loop 5
-			IfExist %A_scriptdir%\ctrll.txt
-			FileDelete, %A_scriptdir%\ctrll.txt
-			;~ sleep 1000
-			gosub reglink
+			;~ send, 0
+			;~ winactivate, ahk_id %ActiveID%
+			;~ browserid=getactiveurl
+			;~ MsgBox %broswerid%
+
+			sURL =
+			sURL :=
+			title =
+			title :=
 			scname =
 			scbody =
+			scname :=
+			scbody :=
+			nTime := A_TickCount
+			sURL := GetActiveBrowserURL()
+			if (sURL = "")
+				{
+					run b:\bat\ahkstart.bat
+				}
+			Else
+			{
+			MsgBox %sURL%
+			;~ gosub zeropage
+
+			WinGetTitle, title, A
+			WinGetClass, sClass, A
+			MsgBox, %title%  %sURL%
+		/* 	loop 5
+			IfExist %A_scriptdir%\ctrll.txt
+			FileDelete, %A_scriptdir%\ctrll.txt
+			sleep 1000
+			gosub reglink
+		*/
+
 			Gui +LastFound +OwnDialogs +AlwaysOnTop
 			inputbox, scname, Enter Name of Script
-			;~ Gui +LastFound -OwnDialogs +AlwaysOnTop
-			InputBox, scbody, Enter Additional Text
-			Gui +LastFound -OwnDialogs -AlwaysOnTop
-			FileAppend,`r`:`:%scname%`:`:`n 	stline =`n`(`n%title%`n%sURL%`n`r%scbody%`n`)`nclipw`(`)`nreturn`n`:`:%scname%r.`:`:`nrun %sURL%`nreturn`n`n`n`n`n`n, %A_scriptdir%\bbb-1-sharable-docs.ahk
+			Gui +LastFound +OwnDialogs +AlwaysOnTop
+			InputBox, scbody, Enter Additional Text  ;add additional text I have not found out how to paste multiple paragraphs.
+			Gui +LastFound +OwnDialogs +AlwaysOnTop
+			MsgBox,  %scname% %title%` %sURL% %scbody%
+			FileAppend,`r`:`:%scname%`:`:`nstline =`n`(`n%title%`n%sURL%`n`r%scbody%`n`)`nclipw`(`)`nreturn`n`:`:%scname%r.`:`:`nrun %sURL%`nreturn`n`n, %A_ScriptDir%\bbb-1-sharable-docs.ahk
 
-			RunWait, code  %A_scriptdir%\bbb-1-sharable-docs.ahk
-			sleep 500
-
-			sendinput ^{end}
-			sleep 100
 			setKeyDelay -1, -1, -1
-			;~ SendInput, return
-/*
-			fileappend,  {
-			fileappend,  Name := "Brad"`n, %A_scriptdir%\ctrll.txt
-			fileappend,  LastName := "Schrunk"`n, %A_scriptdir%\ctrll.txt
-			fileappend,  MailItem := ComObjActive("Outlook.Application").CreateItem(0)`n, %A_scriptdir%\ctrll.txt ;Create a new MailItem object
-			fileappend,  MailItem.SendUsingAccount := MailItem.Application.Session.Accounts.Item["bradschrunk@outlook.com"]`n, %A_scriptdir%\ctrll.txt ;Assign which account to use (can also use NameSpace)
-			fileappend,  MailItem.BodyFormat := 1`n, %A_scriptdir%\ctrll.txt ; Outlook Constants: 1=Text 2=HTML  3=RTF
-			fileappend,  MailItem.TO :=StrSplit(row,"`t").1 "bradschrunk@outlook.com"`n, %A_scriptdir%\ctrll.txt ; Seperate by ; if you want ot have multiple
-			fileappend,  MailItem.CC :="smogmanus@outlook.com"`n, %A_scriptdir%\ctrll.txt
-			fileappend,  ;~ MailItem.BCC :="Joe@working-smarter-not-harder.com"
-			fileappend,  MailItem.Subject := "CEO Sundar Pichai testifies before the House Judiciary Committee"`n, %A_scriptdir%\ctrll.txt
-			fileappend,
-			fileappend,  ;~ MailItem.Attachments.Add("B:\the-automator\Webinar\Scripts\Outlook\AHK_Ball.jpg")
-			fileappend,  MailItem.Importance := 1`n, %A_scriptdir%\ctrll.txt  ;0=Low 1=normal 2=High
-			fileappend,  ;~ MailItem.DeferredDeliveryTime := "1/6/2012 10:40:00 AM"
-			fileappend,  MailItem.OriginatorDeliveryReportRequested := 1`n, %A_scriptdir%\ctrll.txt ;Request a Delivery Reciept
-			fileappend,  MailItem.ReadReceiptRequested := 1`n, %A_scriptdir%\ctrll.txt  ;Request a Read Receipt
-			fileappend,  Name:=StrSplit(row,"`t").2`n, %A_scriptdir%\ctrll.txt
-			fileappend,  LastName:=StrSplit(row,"`t").3`n, %A_scriptdir%\ctrll.txt
-			fileappend,  `n, %A_scriptdir%\ctrll.txt
-			fileappend,  MailItem.HTMLBody := "CEO Sundar Pichai testifies before the House Judiciary Committee  CEO Sundar Pichai testifies before the House Judiciary Committee  CEO Sundar Pichai testifies before the House Judiciary Committee  CEO Sundar Pichai testifies before the House Judiciary Committee"`n, %A_scriptdir%\ctrll.txt
-			fileappend,  MailItem.Display `n, %A_scriptdir%\ctrll.txt;
-			fileappend,  ;~ MsgBox pause
-			fileappend,  }
-			fileappend,  ;~  mailItem.Close(0)`n, %A_scriptdir%\ctrll.txt ;Creates draft version in default folder
-			fileappend,  ;~  MailItem.Send()`n, %A_scriptdir%\ctrll.txt ;Sends the email
-			FileAppend,    return`n, %A_scriptdir%\ctrll.txt
-			*/
-Return
+			;reloads updated files
+			run, b:\bat\ahkstart.bat
 
+/*
+echo off
+TASKKILL /F /IM "AutoHotkey.exe"
+TASKKILL /F /IM "AutoHotkeyU32.exe"
+
+echo off
+
+timeout 3 >  null
+IF EXIST b:\%NUL% start /b b:\bbb-1-startup-work.ahk
+IF EXIST b:\%NUL% start /b b:\bbb-getactiveur2-works.ahk
+IF EXIST b:\%NUL% start /b b:\WindowSnipping.ahk
+
+REM IF EXIST b:\%NUL% start /b b:\HotkeysForPastingImages.ahk
+REM IF EXIST b:\%NUL% start /min b:\ahkstudio.ahk
+REM start /min TrueImage.exe
+copy b:\bbb-1-sharable-docs.ahk  b:\bbb-1-sharable-docs-backup.ahk
+CMD /c
+echo on
+EXIT
+*/
 			}
+
+}
 
 ::mesmes::
 MsgBox %sURL%
 return
 
+::workdir::
+MsgBox, %A_Workingdir%
+Return
 
+
+::scriptdir.::
+MsgBox %A_ScriptDir%
+return
+
+::surl.::
+SendInput, %sURL%
+return
 
 ^!e::  ;sends webpage title
 			;~ mtclient()
@@ -125,11 +163,11 @@ return
 			sleep 1000
 			FileAppend    return`n,%A_scriptdir%\runll.txt
 			Sleep 1000
-			;~ RunWait, %sciahk% %A_scriptdir%\runll.txt
-			;~ FileRead, newpost, %A_WorkingDir%\runll.txt
-			;~ MsgBox, %newpost%
-			;~ StringReplace, %newpost%, %newpost%, `n, , All
-			;~ MsgBox, %newpost%
+			RunWait, %sciahk% %A_scriptdir%\runll.txt
+			FileRead, newpost, %A_WorkingDir%\runll.txt
+			MsgBox, %newpost%
+			StringReplace, %newpost%, %newpost%, `n, , All
+			MsgBox, %newpost%
 			Run, %sciahk% %A_WorkingDir%\runll.txt
 			sleep 100
 
@@ -155,10 +193,12 @@ return
 			}
 Return
 
+; a
 
-::surl::
-SendInput, %sURL%
-return
+::wgclass::
+WinGetClass, class, A
+MsgBox, The active window's class is "%class%".
+Return
 
 
 
@@ -192,39 +232,6 @@ reglink:  ; Used to clean out or adjust unnecessary or incompatible link text
 		;~ Clipboard := RegExReplace(clipboard,"(.+?)","")
 		;~ MsgBox % clipboard
 		return
-
-
-;~ reglink:  ; Used to clean out or adjust unnecessary or incompatible link text
-        ;~ ClipWait, 2
-		;~ SetKeyDelay 100,100
-		;~ Clipboard := RegExReplace(clipboard,"stline `= `(([0-9)])`)","stline =")
-		;~ Clipboard := RegExReplace(clipboard,"&","and")
-		;~ Clipboard := RegExReplace(clipboard,"%","`%")
-		;~ Clipboard := RegExReplace(clipboard,"YouTube","")
-		;~ Clipboard := RegExReplace(clipboard,"� Mozilla Firefox","")
-		;~ Clipboard := RegExReplace(clipboard,"Google","")
-		;~ Clipboard := RegExReplace(clipboard,"-.+YouTube.+�","")
-		;~ Clipboard := RegExReplace(clipboard,"Mozilla Firefox","")
-		;~ Clipboard := RegExReplace(clipboard,"Chrome","")
-		;~ Clipboard := RegExReplace(clipboard,"(0)","")
-		;~ Clipboard := RegExReplace(clipboard,"(1)","")
-		;~ Clipboard := RegExReplace(clipboard,"(2)","")
-		;~ Clipboard := RegExReplace(clipboard,"(3)","test")
-		;~ Clipboard := RegExReplace(clipboard,"`(3`)","test")
-		;~ Clipboard := RegExReplace(clipboard,"(4)","")
-		;~ Clipboard := RegExReplace(clipboard,"(5)","")
-		;~ Clipboard := RegExReplace(clipboard,"(6)","")
-		;~ Clipboard := RegExReplace(clipboard,"(7)","")
-		;~ Clipboard := RegExReplace(clipboard,"(8)","")
-		;~ Clipboard := RegExReplace(clipboard,"(9)","")
-		;~ Clipboard := RegExReplace(clipboard,"()","")
-		;~ Clipboard := RegExReplace(clipboard,"{(}{)}","")
-
-		Clipboard := RegExReplace(clipboard,"(.+?)","")
-		MsgBox % clipboard
-		;~ return
-
-
 
 
 
