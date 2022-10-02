@@ -5,6 +5,7 @@ sciahk = C:\Program Files\AutoHotkey\SciTE\SciTE.exe
 ; Language:           English
 ; Platform:           Win7 SP1 / Win8.1 / Win10
 ; Author:             Antonio Bueno <user atnbueno of Google's popular e-mail service>
+; https://www.autohotkey.com/boards/viewtopic.php?t=3702
 ; Short description:  Gets the URL of the current (active) browser tab for most modern browsers
 ; Last Mod:           2016-05-19
 ;~ #Include %A_scriptdir%\bbb-1-function.ahk
@@ -38,6 +39,8 @@ Return
 ::wd.::
 MsgBox, %a_workingdir%
 return
+
+
 
 
 zeropage:
@@ -79,32 +82,31 @@ return
 				}
 			Else
 			{
-			MsgBox %sURL%
-			;~ gosub zeropage
+			;MsgBox %sURL%
+			;gosub zeropage
+			
 
 			WinGetTitle, title, A
 			WinGetClass, sClass, A
 			MsgBox, %title%  %sURL%
-		/* 	loop 5
-			IfExist %A_scriptdir%\ctrll.txt
-			FileDelete, %A_scriptdir%\ctrll.txt
 			sleep 1000
-			gosub reglink
-		*/
-
+	    	gosub reglink
 			Gui +LastFound +OwnDialogs +AlwaysOnTop
 			inputbox, scname, Enter Name of Script
 			Gui +LastFound +OwnDialogs +AlwaysOnTop
 			InputBox, scbody, Enter Additional Text  ;add additional text I have not found out how to paste multiple paragraphs.
 			Gui +LastFound +OwnDialogs +AlwaysOnTop
-			MsgBox,  %scname% %title%` %sURL% %scbody%
+			;MsgBox,  %scname% %title%` %sURL% %scbody%
 			FileAppend,`r`:`:%scname%`:`:`nstline =`n`(`n%title%`n%sURL%`n`r%scbody%`n`)`nclipw`(`)`nreturn`n`:`:%scname%r.`:`:`nrun %sURL%`nreturn`n`n, %A_ScriptDir%\bbb-1-sharable-docs.ahk
 
 			setKeyDelay -1, -1, -1
+			sleep 1500
 			;reloads updated files
 			run, b:\bat\ahkstart.bat
 
 /*
+
+batchfile named ahkstart.bat
 echo off
 TASKKILL /F /IM "AutoHotkey.exe"
 TASKKILL /F /IM "AutoHotkeyU32.exe"
@@ -165,9 +167,9 @@ return
 			Sleep 1000
 			RunWait, %sciahk% %A_scriptdir%\runll.txt
 			FileRead, newpost, %A_WorkingDir%\runll.txt
-			MsgBox, %newpost%
+			;MsgBox, %newpost%
 			StringReplace, %newpost%, %newpost%, `n, , All
-			MsgBox, %newpost%
+			;MsgBox, %newpost%
 			Run, %sciahk% %A_WorkingDir%\runll.txt
 			sleep 100
 
@@ -211,6 +213,7 @@ reglink:  ; Used to clean out or adjust unnecessary or incompatible link text
 		Clipboard := RegExReplace(clipboard,"&","and")
 		Clipboard := RegExReplace(clipboard,"%","`%")
 		Clipboard := RegExReplace(clipboard,"YouTube","")
+		Clipboard := RegExReplace(clipboard,"�","")
 		Clipboard := RegExReplace(clipboard,"� Mozilla Firefox","")
 		Clipboard := RegExReplace(clipboard,"Google","")
 		Clipboard := RegExReplace(clipboard,"-.+YouTube.+�","")
